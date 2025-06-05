@@ -5,8 +5,9 @@ delas e outras informações pertinentes.
 
 Chave Mestra –– Projeto a ser desenvolvido
 
-Prototipado no dia 04/06/2025 em Fatec Jales, projeto feito pelo grupo de alunos: Nicolas, Kawâ e Heitor.
-o protótipo inicial foi desenvolvido pelo aluno Heitor e está como o primeiro commit do git em GitHub:
+Prototipado no dia 04/06/2025 em Fatec Jales, projeto feito pelo grupo de alunos: Nicolas de Souza Oliveira,
+Kaua de Mori Garrido e Heitor Vieira Strabelli. O protótipo inicial foi desenvolvido pelo aluno Heitor 
+e está disponivel no GitHub:
 
 https://github.com/heitor-hash/Rust_Chave-Mestra
 
