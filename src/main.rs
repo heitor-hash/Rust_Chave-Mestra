@@ -1,6 +1,5 @@
 #![windows_subsystem = "windows"]
 
-
 use fltk::prelude::{GroupExt, WidgetBase, WidgetExt};
 
 mod crip;

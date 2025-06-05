@@ -1,0 +1,51 @@
+O programa 'Chave Mestra' usa de diversas ferramentas para funcionar, este texto tem o objetivo de apresentar e
+esclarecer quais as ferramentas usadas e uma pequena descrição do que foi usados delas, o que é possível usar
+delas e outras informações pertinentes.
+
+
+Chave Mestra –– Projeto a ser desenvolvido
+
+Prototipado no dia 04/06/2025 em Fatec Jales, projeto feito pelo grupo de alunos: Nicolas, Kawâ e Heitor.
+o protótipo inicial foi desenvolvido pelo aluno Heitor e está como o primeiro commit do git em GitHub !!!!! COLOCAR O LINK DO PROJETO NO GITHUB !!!!!
+
+
+Rust –– A linguagem de programação
+
+Rust é uma linguagem estaticamente tipada com uso de compilador e semelhança à C++, porém com maior facilidade de 
+programar e maior segurança de memória, prevenindo vazamentos de memória ou dados.
+
+Ela é uma linguagem de código aberto e livre, foi inicialmente feita em 2015 e foi sendo desenvolvida
+desde então, assim ela é relativamente recente e pequena, mas ainda potente tendo performance comparável à
+C++ entretanto ainda não tão rápida como o 'C'.
+
+Esta linguagem pode ser compilada para diversos sistemas operacionais, entre eles têm: Windows, Linux, WebAssembly
+(linguagem de navegadores de internet)
+
+FLTK –– Biblioteca de interface gráfica
+
+Esta biblioteca é escrita e feita para C++, Porém ela tem sua compatibilidade para 'Rust' permitindo ela ser usada
+no projeto, ela foi escolhida por sua leveza depois de compilada, resultando em um executável de menos de 1mb e sua
+relativa facilidade de uso, porem com seus problemas de ter falta de facilidades de programar como centralizar
+widgets entre outros.
+
+
+Sha2 –– Hasher feito para segurança
+
+Esta biblioteca possui diferentes tipos de hashing, o tipo usado foi o Sha256 que transforma uma senha em um numero
+de 256 bits (32 bytes), resultando em um número até aproximadamente 4,7 * 10^21, um número com 22 algarismos, sendo 
+extremamente difícil de burlar.
+
+
+Aes_gcm –– Criptografador que usa hash
+
+O Aes_gcm é um criptografador que usa o hash criado pelo Sha2 como senha, sendo assim ele tem boa segurança,
+o criptografador também automaticamente cria e gerencia o uso de 'nonce's, um número aleatório de 96 bits (12 bytes)
+que é usado como uma forma de criar um resultado diferente toda vez que o arquivo é criptografado, sendo assim o
+mesmo arquivo e senha pode ter várias criptografações diferentes e torna o programa mais seguro.
+
+
+LICENCE –– licença da MIT
+
+O projeto será protegido pela licenda da MIT que é geralmente livre para ser usado, porêm com segurança de ser
+usado como copia ou clonado, permitindo que usuários independentes usem livremente aumentando o alcançe do projeto.
+Porêm esta licença não abrange todas as condições do time então é planejado mudar para uma licença própria no futuro.
