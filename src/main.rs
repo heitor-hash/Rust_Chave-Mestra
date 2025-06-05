@@ -1,6 +1,5 @@
 #![windows_subsystem = "windows"]
 
-use std::fs::read;
 
 use fltk::prelude::{GroupExt, WidgetBase, WidgetExt};
 
@@ -102,7 +101,7 @@ fn main() {
     let mut decript_btn = fltk::button::Button::default().with_label("Descriptografar");
     top_buttons_flex.end();
 
-    let mut flex = fltk::group::Flex::default()
+    let flex = fltk::group::Flex::default()
         .with_size(init_width - 50, init_height - 130)
         .with_pos(25, 105)
         .column();
@@ -111,7 +110,7 @@ fn main() {
 
     encript_btn.set_callback(move |_| {
         if let Some(path) =
-            (fltk::dialog::file_chooser("Escolha um arquivo para travar", "*.*", ".", false))
+            fltk::dialog::file_chooser("Escolha um arquivo para travar", "*.*", ".", false)
         {
             if let Some(key) = fltk::dialog::input_default("Digite a senha", "") {
                 encrypt(&path, &key);
@@ -124,7 +123,7 @@ fn main() {
 
     decript_btn.set_callback(move |_| {
         if let Some(path) =
-            (fltk::dialog::file_chooser("Escolha um arquivo para destravar", "*.*", ".", false))
+            fltk::dialog::file_chooser("Escolha um arquivo para destravar", "*.*", ".", false)
         {
             if let Some(key) = fltk::dialog::input_default("Digite a senha", "") {
                 decrypt(&path, &key);
