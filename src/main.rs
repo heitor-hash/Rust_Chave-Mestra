@@ -1,9 +1,6 @@
 #![windows_subsystem = "windows"]
 
-use fltk::{
-    macros::display,
-    prelude::{GroupExt, WidgetBase, WidgetExt},
-};
+use fltk::prelude::{GroupExt, WidgetBase, WidgetExt};
 
 mod crip;
 
@@ -73,6 +70,7 @@ fn decrypt(path: &str, key: &str) {
 fn save_as_dialog(b: &str) -> Option<String> {
     match rfd::FileDialog::default()
         .set_title("Selecione um arquivo")
+        .set_file_name(b)
         .save_file()
     {
         Some(a) => Some(a.to_string_lossy().to_string()),
