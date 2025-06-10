@@ -6,6 +6,7 @@ edition = "2024"
 [dependencies]
 aes-gcm = "0.10.3"
 fltk = "1.5.9"
+rfd = "0.15.3"
 sha2 = "0.10.9"
 
 

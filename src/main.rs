@@ -1,6 +1,9 @@
 #![windows_subsystem = "windows"]
 
-use fltk::prelude::{GroupExt, WidgetBase, WidgetExt};
+use fltk::{
+    macros::display,
+    prelude::{GroupExt, WidgetBase, WidgetExt},
+};
 
 mod crip;
 
@@ -68,8 +71,11 @@ fn decrypt(path: &str, key: &str) {
 }
 
 fn save_as_dialog(b: &str) -> Option<String> {
-    match fltk::dialog::file_chooser("Salvar arquivo como", "*.*", b, false) {
-        Some(a) => Some(a),
+    match rfd::FileDialog::default()
+        .set_title("Selecione um arquivo")
+        .save_file()
+    {
+        Some(a) => Some(a.to_string_lossy().to_string()),
         None => None,
     }
 }
@@ -108,26 +114,28 @@ fn main() {
     flex.end();
 
     encript_btn.set_callback(move |_| {
-        if let Some(path) =
-            fltk::dialog::file_chooser("Escolha um arquivo para travar", "*.*", ".", false)
+        if let Some(path) = rfd::FileDialog::new()
+            .set_title("Selecione arquivo para trancar")
+            .pick_file()
         {
             if let Some(key) = fltk::dialog::input_default("Digite a senha", "") {
-                encrypt(&path, &key);
+                encrypt(&path.to_str().unwrap(), &key);
             }
-            println!("Arquivo selecionado: {}", path)
+            println!("Arquivo selecionado: {}", path.to_str().unwrap())
         } else {
             println!("Não selecionou arquivo")
         }
     });
 
     decript_btn.set_callback(move |_| {
-        if let Some(path) =
-            fltk::dialog::file_chooser("Escolha um arquivo para destravar", "*.*", ".", false)
+        if let Some(path) = rfd::FileDialog::new()
+            .set_title("Selecione arquivo para destrancar")
+            .pick_file()
         {
             if let Some(key) = fltk::dialog::input_default("Digite a senha", "") {
-                decrypt(&path, &key);
+                decrypt(&path.to_str().unwrap(), &key);
             }
-            println!("Arquivo selecionado: {}", path)
+            println!("Arquivo selecionado: {}", path.to_str().unwrap())
         } else {
             println!("Não selecionou arquivo")
         }
