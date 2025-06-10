@@ -26,6 +26,7 @@ C++ entretanto ainda não tão rápida como o 'C'.
 Esta linguagem pode ser compilada para diversos sistemas operacionais, entre eles têm: Windows, Linux, WebAssembly
 (linguagem de navegadores de internet)
 
+
 FLTK –– Biblioteca de interface gráfica
 
 Esta biblioteca é escrita e feita para C++, Porém ela tem sua compatibilidade para 'Rust' permitindo ela ser usada
@@ -33,11 +34,13 @@ no projeto, ela foi escolhida por sua leveza depois de compilada, resultando em 
 relativa facilidade de uso, porem com seus problemas de ter falta de facilidades de programar como centralizar
 widgets entre outros.
 
+
 Rfd –– Biblioteca de dialogos nativos
 
 Esta biblioteca é feita a tal modo que ela usa os dialogos nativos dos sistemas operacionais como Windows, Linux e
 MacOS. O uso dela foi porque o fltk não tem interface moderna para dialogos como "Abrir arquivo" e "Salvar como",
 assim o programa se torna mais intuitivo pois usa de elementos que o usuário já está acostumado.
+
 
 Sha2 –– Hasher feito para segurança
 
