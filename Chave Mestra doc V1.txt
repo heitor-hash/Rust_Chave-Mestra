@@ -5,6 +5,11 @@ esclarecer quais as ferramentas usadas e uma pequena descrição do que foi usad
 delas e outras informações pertinentes.
 
 
+Descrição
+
+O programa tem a funcionalidade de criptografar e descriptografar arquivos com o uso de hash e nonce (número 
+aleatório), senhas são hashadas antes de ser usadas então o usuário não interage com os hashes em si.
+
 Chave Mestra –– Projeto a ser desenvolvido
 
 Prototipado no dia 04/06/2025 em Fatec Jales, projeto feito pelo grupo de alunos: Nicolas de Souza Oliveira,
