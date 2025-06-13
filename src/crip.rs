@@ -52,5 +52,5 @@ pub fn decrypt(data: &[u8], hash: &[u8; 32]) -> Result<Vec<u8>, Error> {
     }
 
     println!("{}, teste = {:?} \n{:?}", f, test, "123456789".as_bytes());
-    return Err(Error);
+    Err(Error)
 }

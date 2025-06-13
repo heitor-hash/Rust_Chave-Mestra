@@ -8,7 +8,7 @@ fn remove_path_cript(path: &str) -> &str {
     let len = path.len();
     let (first, last) = path.split_at(len - 6);
     match last {
-        ".cript" => return first,
+        ".cript" => first,
         _ => path,
     }
 }
@@ -18,7 +18,7 @@ fn encrypt(path: &str, key: &str, term: fltk::terminal::Terminal) {
         Ok(data) => data,
         Err(_) => return,
     };
-    let hash: [u8; 32] = crip::key_into_hash(&key);
+    let hash: [u8; 32] = crip::key_into_hash(key);
     let criptdata: Vec<u8> = match crip::encrypt(&data, &hash) {
         Ok(a) => a,
         Err(e) => {
@@ -28,21 +28,18 @@ fn encrypt(path: &str, key: &str, term: fltk::terminal::Terminal) {
         }
     };
     let new_path: String = format!("{}{}", path, ".cript");
-    match save_as_dialog(new_path.as_str()) {
-        Some(a) => {
-            std::fs::write(&a, criptdata).unwrap();
-            fltk::dialog::message_default(
-                format!("Arquivo criptografado com sucesso em: {}", a).as_str(),
-            );
-            let systime = std::time::SystemTime::now();
-            let time_now = time_format::from_system_time(systime).unwrap();
-            let comp = time_format::components_local(time_now).unwrap();
-            write_to_history(
-                format!("[{}:{}] Descriptografado em {}", comp.hour, comp.min, &a).as_str(),
-                term,
-            );
-        }
-        None => (),
+    if let Some(a) = save_as_dialog(new_path.as_str()) {
+        std::fs::write(&a, criptdata).unwrap();
+        fltk::dialog::message_default(
+            format!("Arquivo criptografado com sucesso em: {}", a).as_str(),
+        );
+        write_to_history(
+            {
+                let (h, m) = get_time_in_hour_min();
+                format!("[{}:{}] Criptografado em: {path}\n", h, m, path = &a)
+            },
+            term,
+        );
     }
 }
 
@@ -54,7 +51,7 @@ fn decrypt(path: &str, key: &str, term: fltk::terminal::Terminal) {
             return;
         }
     };
-    let hash: [u8; 32] = crip::key_into_hash(&key);
+    let hash: [u8; 32] = crip::key_into_hash(key);
     let data: Vec<u8> = match crip::decrypt(&criptdata, &hash) {
         Ok(data) => data,
         Err(e) => {
@@ -63,37 +60,38 @@ fn decrypt(path: &str, key: &str, term: fltk::terminal::Terminal) {
         }
     };
     let path = remove_path_cript(path);
-    match save_as_dialog(path) {
-        Some(a) => {
-            std::fs::write(&a, data).unwrap();
-            fltk::dialog::message_default(
-                format!("Arquivo descriptografado com sucesso em: {}", a).as_str(),
-            );
-            let systime = std::time::SystemTime::now();
-            let time_now = time_format::from_system_time(systime).unwrap();
-            let comp = time_format::components_local(time_now).unwrap();
-            write_to_history(
-                format!("[{}:{}] Descriptografado em {}", comp.hour, comp.min, &a).as_str(),
-                term,
-            );
-        }
-        None => (),
+    if let Some(a) = save_as_dialog(path) {
+        std::fs::write(&a, data).unwrap();
+        fltk::dialog::message_default(
+            format!("Arquivo descriptografado com sucesso em: {}", a).as_str(),
+        );
+        write_to_history(
+            {
+                let (h, m) = get_time_in_hour_min();
+                format!("[{}:{}] Descriptografado em: {path}\n", h, m, path = &a)
+            },
+            term,
+        );
     }
 }
 
 fn save_as_dialog(b: &str) -> Option<String> {
-    match rfd::FileDialog::default()
+    rfd::FileDialog::default()
         .set_title("Selecione um arquivo")
         .set_file_name(b)
         .save_file()
-    {
-        Some(a) => Some(a.to_string_lossy().to_string()),
-        None => None,
-    }
+        .map(|a| a.to_string_lossy().to_string())
 }
 
-fn write_to_history(s: &str, mut term: fltk::terminal::Terminal) {
-    term.append(s);
+fn write_to_history(s: String, mut term: fltk::terminal::Terminal) {
+    term.append(&s);
+}
+
+fn get_time_in_hour_min() -> (u8, u8) {
+    let now = time::OffsetDateTime::now_utc();
+    let hour = now.hour();
+    let minute = now.minute();
+    (hour, minute)
 }
 
 fn main() {
@@ -103,16 +101,16 @@ fn main() {
     // get screen height:
     let screen_height = fltk::app::screen_size().1;
 
-    let init_width = 500;
+    let init_width = 600;
     let init_height = 300;
     let mut wind = fltk::window::Window::new(
         screen_width as i32 / 2 - init_width / 2,
         screen_height as i32 / 2 - init_height / 2,
         init_width,
         init_height,
-        "Janela Inicial, Principal",
+        "Chave Mestra",
     );
-    // wind.resizable(&wind);
+    wind.resizable(&wind);
 
     let top_buttons_flex = fltk::group::Flex::default()
         .with_size(init_width - 50, 80)
@@ -138,7 +136,7 @@ fn main() {
                 .pick_file()
             {
                 if let Some(key) = fltk::dialog::input_default("Digite a senha", "") {
-                    encrypt(&path.to_str().unwrap(), &key, term.clone());
+                    encrypt(path.to_str().unwrap(), &key, term.clone());
                 }
                 println!("Arquivo selecionado: {}", path.to_str().unwrap())
             } else {
@@ -156,7 +154,7 @@ fn main() {
                 .pick_file()
             {
                 if let Some(key) = fltk::dialog::input_default("Digite a senha", "") {
-                    decrypt(&path.to_str().unwrap(), &key, term.clone());
+                    decrypt(path.to_str().unwrap(), &key, term.clone());
                 }
                 println!("Arquivo selecionado: {}", path.to_str().unwrap())
             } else {
