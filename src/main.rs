@@ -13,7 +13,7 @@ fn remove_path_cript(path: &str) -> &str {
     }
 }
 
-fn encrypt(path: &str, key: &str) {
+fn encrypt(path: &str, key: &str, term: fltk::terminal::Terminal) {
     let data = match std::fs::read(path) {
         Ok(data) => data,
         Err(_) => return,
@@ -34,12 +34,19 @@ fn encrypt(path: &str, key: &str) {
             fltk::dialog::message_default(
                 format!("Arquivo criptografado com sucesso em: {}", a).as_str(),
             );
+            let systime = std::time::SystemTime::now();
+            let time_now = time_format::from_system_time(systime).unwrap();
+            let comp = time_format::components_local(time_now).unwrap();
+            write_to_history(
+                format!("[{}:{}] Descriptografado em {}", comp.hour, comp.min, &a).as_str(),
+                term,
+            );
         }
         None => (),
     }
 }
 
-fn decrypt(path: &str, key: &str) {
+fn decrypt(path: &str, key: &str, term: fltk::terminal::Terminal) {
     let criptdata: Vec<u8> = match std::fs::read(path) {
         Ok(a) => a,
         Err(_) => {
@@ -62,6 +69,13 @@ fn decrypt(path: &str, key: &str) {
             fltk::dialog::message_default(
                 format!("Arquivo descriptografado com sucesso em: {}", a).as_str(),
             );
+            let systime = std::time::SystemTime::now();
+            let time_now = time_format::from_system_time(systime).unwrap();
+            let comp = time_format::components_local(time_now).unwrap();
+            write_to_history(
+                format!("[{}:{}] Descriptografado em {}", comp.hour, comp.min, &a).as_str(),
+                term,
+            );
         }
         None => (),
     }
@@ -76,6 +90,10 @@ fn save_as_dialog(b: &str) -> Option<String> {
         Some(a) => Some(a.to_string_lossy().to_string()),
         None => None,
     }
+}
+
+fn write_to_history(s: &str, mut term: fltk::terminal::Terminal) {
+    term.append(s);
 }
 
 fn main() {
@@ -109,33 +127,41 @@ fn main() {
         .with_pos(25, 105)
         .column();
 
+    let term: fltk::terminal::Terminal = fltk::terminal::Terminal::default();
     flex.end();
 
-    encript_btn.set_callback(move |_| {
-        if let Some(path) = rfd::FileDialog::new()
-            .set_title("Selecione arquivo para trancar")
-            .pick_file()
-        {
-            if let Some(key) = fltk::dialog::input_default("Digite a senha", "") {
-                encrypt(&path.to_str().unwrap(), &key);
+    encript_btn.set_callback({
+        let term: fltk::terminal::Terminal = term.clone();
+        move |_| {
+            if let Some(path) = rfd::FileDialog::new()
+                .set_title("Selecione arquivo para trancar")
+                .pick_file()
+            {
+                if let Some(key) = fltk::dialog::input_default("Digite a senha", "") {
+                    encrypt(&path.to_str().unwrap(), &key, term.clone());
+                }
+                println!("Arquivo selecionado: {}", path.to_str().unwrap())
+            } else {
+                println!("Não selecionou arquivo")
             }
-            println!("Arquivo selecionado: {}", path.to_str().unwrap())
-        } else {
-            println!("Não selecionou arquivo")
         }
     });
 
-    decript_btn.set_callback(move |_| {
-        if let Some(path) = rfd::FileDialog::new()
-            .set_title("Selecione arquivo para destrancar")
-            .pick_file()
-        {
-            if let Some(key) = fltk::dialog::input_default("Digite a senha", "") {
-                decrypt(&path.to_str().unwrap(), &key);
+    decript_btn.set_callback({
+        let term = term.clone();
+        // Não usado pois é o ultimo movimento do term
+        move |_| {
+            if let Some(path) = rfd::FileDialog::new()
+                .set_title("Selecione arquivo para destrancar")
+                .pick_file()
+            {
+                if let Some(key) = fltk::dialog::input_default("Digite a senha", "") {
+                    decrypt(&path.to_str().unwrap(), &key, term.clone());
+                }
+                println!("Arquivo selecionado: {}", path.to_str().unwrap())
+            } else {
+                println!("Não selecionou arquivo")
             }
-            println!("Arquivo selecionado: {}", path.to_str().unwrap())
-        } else {
-            println!("Não selecionou arquivo")
         }
     });
 
