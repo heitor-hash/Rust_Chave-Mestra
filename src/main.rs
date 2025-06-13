@@ -88,7 +88,7 @@ fn write_to_history(s: String, mut term: fltk::terminal::Terminal) {
 }
 
 fn get_time_in_hour_min() -> (u8, u8) {
-    let now = time::OffsetDateTime::now_utc();
+    let now = time::OffsetDateTime::now_local().unwrap();
     let hour = now.hour();
     let minute = now.minute();
     (hour, minute)
